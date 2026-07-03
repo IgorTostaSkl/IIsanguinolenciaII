@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanguinolencia – Ficha</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container-xl py-3 px-2 px-md-3">
+
+  <!-- HEADER -->
+  <div class="sheet-header">
+    <p class="subtitle">Ficha de Personagem</p>
+    <h1>☩ Sanguinolência ☩</h1>
+  </div>
+
+  <!-- NOME DO JOGADOR -->
+  <div class="row g-2 mb-2">
+    <div class="col-12">
+      <div class="card-dark" style="padding:.75rem 1.25rem;">
+        <h5 style="margin-bottom:.5rem;">Nome do Personagem</h5>
+        <input type="text" id="nomeJogador" placeholder="Digite o nome do seu personagem…" style="font-size:1rem;letter-spacing:.05em;">
+      </div>
+    </div>
+  </div>
+
+  <!-- HP / ST / MP -->
+  <div class="row g-2 mb-2">
+    <div class="col-4">
+      <div class="stat-box">
+        <label>HP</label>
+        <input type="number" id="hp" placeholder="0" min="0" max="60">
+        <span class="stat-base" id="hpBase"></span>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="stat-box">
+        <label>ST</label>
+        <input type="number" id="sp" placeholder="0" min="0" max="60">
+        <span class="stat-base" id="spBase"></span>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="stat-box">
+        <label>MP</label>
+        <input type="number" id="mp" placeholder="0" min="0" max="60">
+        <span class="stat-base" id="mpBase"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PESO / TRAUMA / MOTIVAÇÃO / TURNOS -->
+  <div class="row g-2 mb-2">
+
+    <!-- PESO -->
+    <div class="col-6 col-md-3">
+      <div class="card-dark">
+        <h5>Peso</h5>
+        <div class="d-flex align-items-center gap-2">
+          <input type="number" id="pesoAtual" placeholder="0" min="0" style="width:60px;flex-shrink:0;" oninput="atualizarPeso()">
+          <span style="color:var(--muted);font-size:.8rem;">/ <span id="pesoMax">7</span></span>
+        </div>
+        <div class="peso-bar-wrap mt-2">
+          <div class="peso-bar" id="pesoBar" style="width:0%"></div>
+        </div>
+        <div id="pesoAviso" style="font-size:.68rem;min-height:.9rem;margin-top:.3rem;"></div>
+      </div>
+    </div>
+
+    <!-- TURNOS -->
+    <div class="col-6 col-md-3">
+      <div class="card-dark">
+        <h5>Turnos</h5>
+        <div class="turnos-display">
+          <span id="turno1" class="turno-pip"></span>
+          <span id="turno2" class="turno-pip"></span>
+          <span id="turno3" class="turno-pip"></span>
+          <span id="turno4" class="turno-pip"></span>
+        </div>
+        <div id="turnosInfo" style="font-size:.68rem;color:var(--muted);margin-top:.4rem;">0 turnos — ST insuficiente</div>
+      </div>
+    </div>
+
+    <!-- TRAUMA -->
+    <div class="col-12 col-md-3">
+      <div class="card-dark">
+        <h5>Trauma</h5>
+        <input type="text" id="trauma" placeholder="Descreva o trauma do personagem…">
+      </div>
+    </div>
+
+    <!-- MOTIVAÇÃO -->
+    <div class="col-12 col-md-3">
+      <div class="card-dark">
+        <h5>Motivação</h5>
+        <input type="text" id="motivacao" placeholder="O que move o personagem…">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CLASSE + ITEM QUERIDO -->
+  <div class="row g-2 mb-3 align-items-stretch">
+
+    <!-- SELETOR DE CLASSE -->
+    <div class="col-12 col-md-5">
+      <div class="card-dark h-100">
+        <h5>Classe</h5>
+        <div class="dropdown dropdown-dark" id="classeDropdown">
+          <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" id="classeBtn">
+            Escolher classe…
+          </button>
+          <ul class="dropdown-menu" id="classeMenu"></ul>
+        </div>
+        <div id="classeNome" style="margin-top:.6rem;font-size:.8rem;color:var(--accent2);font-weight:bold;min-height:1.2rem;"></div>
+        <button id="classeInfoBtn" onclick="toggleClasseInfo()" style="display:none;margin-top:.4rem;background:none;border:none;color:var(--muted);font-size:.7rem;cursor:pointer;padding:0;text-decoration:underline;">
+          ver habilidades ▾
+        </button>
+        <div id="classeInfo" style="display:none;margin-top:.5rem;font-size:.72rem;color:var(--text);line-height:1.5;border-top:1px solid var(--border);padding-top:.5rem;"></div>
+      </div>
+    </div>
+
+    <!-- ITEM QUERIDO -->
+    <div class="col-12 col-md-7">
+      <div class="card-dark h-100">
+        <h5>Item Querido</h5>
+        <input type="text" id="itemQuerido" placeholder="Nome do item querido do personagem…" style="margin-bottom:.6rem;">
+        <div id="itemQueridoDesc" style="font-size:.72rem;color:var(--muted);line-height:1.5;min-height:1rem;"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LINHA PRINCIPAL -->
+  <div class="row g-3 mb-3">
+
+    <!-- ATRIBUTOS -->
+        <div class="col-12 col-md-6 col-lg-5">
+      <div class="card-dark">
+        <h5>Atributos</h5>
+        <table class="attr-table">
+          <thead>	
+            <tr>
+              <th>Atributo</th>
+              <th>Valor</th>
+              <th>Dado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Força</td>
+              <td><input type="number" placeholder="0" id="strScore" min="0"></td>
+              <td><span class="dado-badge" id="strDado">d4</span></td>
+            </tr>
+            <tr>
+              <td>Agilidade</td>
+              <td><input type="number" placeholder="0" id="aglScore" min="0"></td>
+              <td><span class="dado-badge" id="aglDado">d4</span></td>
+            </tr>
+            <tr>
+              <td>Condicionamento</td>
+              <td><input type="number" placeholder="0" id="conScore" min="0"></td>
+              <td><span class="dado-badge" id="conDado">d4</span></td>
+            </tr>
+            <tr>
+              <td>Persuasão</td>
+              <td><input type="number" placeholder="0" id="persuasionScore" min="0"></td>
+              <td><span class="dado-badge" id="persuasionDado">d4</span></td>
+            </tr>
+            <tr>
+              <td>Sanidade</td>
+              <td><input type="number" placeholder="0" id="sanityScore" min="0"></td>
+              <td><span class="dado-badge" id="sanityDado">d4</span></td>
+            </tr>
+            <tr>
+              <td>Vigília</td>
+              <td><input type="number" placeholder="0" id="vigiliaScore" min="0"></td>
+              <td><span class="dado-badge" id="vigiliaDado">d4</span></td>
+            </tr>
+            <tr>
+              <td>Engenharia</td>
+              <td><input type="number" placeholder="0" id="engineeringScore" min="0"></td>
+              <td><span class="dado-badge" id="engineeringDado">d4</span></td>
+              <tr>
+              <td>Inteligencia</td>
+              <td><input type="number" placeholder="0" id="intelligenceScore" min="0"></td>
+              <td><span class="dado-badge" id="intelligenceDado">d4</span></td>
+            </tr>
+            <tr>
+              <td>Fé</td>
+              <td><input type="number" placeholder="0" id="faithScore" min="0"></td>
+              <td><span class="dado-badge" id="faithDado">d4</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="mt-2 mb-0" style="font-size:.7rem;color:var(--muted);">
+          Dado sobe a cada 5 pontos: d4 → d6 → d8 → d10 → d12 → d20
+        </p>
+      </div>
+    </div>
+
+    <!-- NÍVEL + PERÍCIA -->
+    <div class="col-12 col-md-6 col-lg-7">
+      <div class="row g-3 h-100">
+
+        <!-- NÍVEL -->
+        <div class="col-12 col-sm-5">
+          <div class="card-dark">
+            <h5>Nível do Jogador</h5>
+            <div class="level-display" id="levelDisplay">1</div>
+            <div class="xp-bar-wrap"><div class="xp-bar" id="xpBar" style="width:10%"></div></div>
+            <div class="mt-3 d-flex align-items-center gap-2">
+              <button class="btn btn-sm" style="background:var(--border);color:var(--text);" onclick="changeLevel(-1)">−</button>
+              <input type="number" id="playerLevel" min="1" max="20" value="1"
+                style="text-align:center;"
+                oninput="updateLevel(this.value)">
+              <button class="btn btn-sm" style="background:var(--border);color:var(--text);" onclick="changeLevel(1)">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PERÍCIA -->
+        <div class="col-12 col-sm-7">
+          <div class="card-dark">
+            <h5>Perícias</h5>
+            <p id="slotInfo" style="font-size:.7rem;color:var(--muted);margin-bottom:.6rem;">Slots: 0 / 0 — melhore um atributo para ganhar slots</p>
+            <div class="dropdown dropdown-dark" id="periciaDropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="periciaBtn">
+                Selecionar perícia…
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+              </button>
+              <ul class="dropdown-menu" id="periciaMenu"></ul>
+            </div>
+            <div class="pericia-selected-list" id="pericias"></div>
+          </div>
+        </div>
+
+        <!-- HISTÓRIA / NOTAS -->
+        <div class="col-12">
+          <div class="card-dark">
+            <h5>Notas / História</h5>
+            <textarea class="notes" id="history" placeholder="Antecedentes, motivações, anotações de sessão…"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- INVENTÁRIO / ENCANTAMENTOS / EQUIPAMENTO -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="card-dark">
+        <h5>Inventário</h5>
+        <div id="inventarioList" class="mb-2" style="min-height:40px;font-size:.85rem;"></div>
+        <div class="d-flex gap-2">
+          <input type="text" id="inventarioInput" placeholder="Novo item…">
+          <button class="btn btn-sm" style="background:var(--accent);color:#fff;white-space:nowrap;" onclick="addItem('inventario')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card-dark">
+        <h5>Encantamentos</h5>
+        <div id="encantamentoList" class="mb-2" style="min-height:40px;font-size:.85rem;"></div>
+        <div class="d-flex gap-2">
+          <input type="text" id="encantamentoInput" placeholder="Novo encantamento…">
+          <button class="btn btn-sm" style="background:var(--accent);color:#fff;white-space:nowrap;" onclick="addItem('encantamento')">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="card-dark">
+        <h5>Equipamento</h5>
+        <div id="equipamentoList" class="mb-2" style="min-height:40px;font-size:.85rem;"></div>
+        <div class="d-flex gap-2">
+          <input type="text" id="equipamentoInput" placeholder="Novo equipamento…">
+          <button class="btn btn-sm" style="background:var(--accent);color:#fff;white-space:nowrap;" onclick="addItem('equipamento')">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AÇÕES DA FICHA -->
+  <div class="sheet-actions">
+    <button class="action-btn save"  onclick="salvarFicha()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2.5L13.5 1H2zm7 11H7V9h2v3zm-4 0H4V9h1v3zm8-9v1H3V3h10z"/></svg>
+      Salvar Ficha
+    </button>
+    <button class="action-btn load"  onclick="carregarFicha()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/></svg>
+      Carregar Ficha
+    </button>
+    <button class="action-btn reset" onclick="confirmarReset()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+      Resetar Ficha
+    </button>
+  </div>
+
+  <!-- TOAST DE FEEDBACK -->
+  <div id="toast" class="sheet-toast"></div>
+
+  <!-- MODAL DE CONFIRMAÇÃO DE RESET -->
+  <div id="resetModal" class="modal-overlay" style="display:none;" onclick="fecharModal(event)">
+    <div class="modal-box">
+      <p style="margin:0 0 1rem;font-size:.95rem;">Tem certeza que quer resetar a ficha? <br><span style="color:var(--muted);font-size:.8rem;">Todos os dados serão apagados.</span></p>
+      <div style="display:flex;gap:.75rem;justify-content:flex-end;">
+        <button onclick="document.getElementById('resetModal').style.display='none'" style="background:var(--border);border:none;color:var(--text);padding:.4rem 1rem;border-radius:4px;cursor:pointer;">Cancelar</button>
+        <button onclick="resetarFicha()" style="background:var(--accent);border:none;color:#fff;padding:.4rem 1rem;border-radius:4px;cursor:pointer;">Resetar</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script src="script.js"></script>
+</body>
+</html>
