@@ -33,21 +33,21 @@
     <div class="col-4">
       <div class="stat-box">
         <label>HP</label>
-        <input type="number" id="hp" placeholder="0" min="0" max="60">
+        <input type="number" id="hp" placeholder="0" min="0">
         <span class="stat-base" id="hpBase"></span>
       </div>
     </div>
     <div class="col-4">
       <div class="stat-box">
         <label>ST</label>
-        <input type="number" id="sp" placeholder="0" min="0" max="60">
+        <input type="number" id="sp" placeholder="0" min="0">
         <span class="stat-base" id="spBase"></span>
       </div>
     </div>
     <div class="col-4">
       <div class="stat-box">
         <label>MP</label>
-        <input type="number" id="mp" placeholder="0" min="0" max="60">
+        <input type="number" id="mp" placeholder="0" min="0">
         <span class="stat-base" id="mpBase"></span>
       </div>
     </div>
@@ -139,11 +139,11 @@
   <div class="row g-3 mb-3">
 
     <!-- ATRIBUTOS -->
-        <div class="col-12 col-md-6 col-lg-5">
+    <div class="col-12 col-md-6 col-lg-5">
       <div class="card-dark">
         <h5>Atributos</h5>
         <table class="attr-table">
-          <thead>	
+          <thead>
             <tr>
               <th>Atributo</th>
               <th>Valor</th>
@@ -153,53 +153,55 @@
           <tbody>
             <tr>
               <td>Força</td>
-              <td><input type="number" placeholder="0" id="strScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="strScore" min="0"></td>
               <td><span class="dado-badge" id="strDado">d4</span></td>
             </tr>
             <tr>
               <td>Agilidade</td>
-              <td><input type="number" placeholder="0" id="aglScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="aglScore" min="0"></td>
               <td><span class="dado-badge" id="aglDado">d4</span></td>
             </tr>
             <tr>
               <td>Condicionamento</td>
-              <td><input type="number" placeholder="0" id="conScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="conScore" min="0"></td>
               <td><span class="dado-badge" id="conDado">d4</span></td>
             </tr>
             <tr>
               <td>Persuasão</td>
-              <td><input type="number" placeholder="0" id="persuasionScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="persuasionScore" min="0"></td>
               <td><span class="dado-badge" id="persuasionDado">d4</span></td>
             </tr>
             <tr>
               <td>Sanidade</td>
-              <td><input type="number" placeholder="0" id="sanityScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="sanityScore" min="0"></td>
               <td><span class="dado-badge" id="sanityDado">d4</span></td>
             </tr>
             <tr>
               <td>Vigília</td>
-              <td><input type="number" placeholder="0" id="vigiliaScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="vigiliaScore" min="0"></td>
               <td><span class="dado-badge" id="vigiliaDado">d4</span></td>
             </tr>
             <tr>
               <td>Engenharia</td>
-              <td><input type="number" placeholder="0" id="engineeringScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="engineeringScore" min="0"></td>
               <td><span class="dado-badge" id="engineeringDado">d4</span></td>
-              <tr>
-              <td>Inteligencia</td>
-              <td><input type="number" placeholder="0" id="intelligenceScore" min="0"></td>
-              <td><span class="dado-badge" id="intelligenceDado">d4</span></td>
-            </tr>
-            <tr>
-              <td>Fé</td>
-              <td><input type="number" placeholder="0" id="faithScore" min="0"></td>
-              <td><span class="dado-badge" id="faithDado">d4</span></td>
             </tr>
           </tbody>
         </table>
         <p class="mt-2 mb-0" style="font-size:.7rem;color:var(--muted);">
           Dado sobe a cada 5 pontos: d4 → d6 → d8 → d10 → d12 → d20
         </p>
+        <div class="pontos-wrap mt-2">
+          <div class="pontos-row">
+            <span class="pontos-label">Pontos disponíveis</span>
+            <span id="pontosRestantes" class="pontos-valor">60</span>
+            <span class="pontos-total">/ <span id="pontosTotal">60</span></span>
+          </div>
+          <div class="pontos-bar-wrap">
+            <div class="pontos-bar" id="pontosBar" style="width:100%"></div>
+          </div>
+          <div id="pontosAviso" style="font-size:.68rem;min-height:.9rem;margin-top:.2rem;"></div>
+        </div>
       </div>
     </div>
 

@@ -57,6 +57,7 @@ attrPairs.forEach(([inputId, badgeId]) => {
     }
 
     badge.textContent = dadoMap[novoIdx][1];
+    atualizarPontos();
   });
 });
 
@@ -87,6 +88,7 @@ function updateLevel(v) {
   document.getElementById('playerLevel').value        = n;
   document.getElementById('levelDisplay').textContent = n;
   document.getElementById('xpBar').style.width        = (n / 20 * 100) + '%';
+  atualizarPontos();
 }
 
 function changeLevel(d) {
@@ -100,7 +102,7 @@ document.getElementById('playerLevel').addEventListener('input', e => updateLeve
 const PERICIAS = [
   'Atletismo', 'Combate corpo-a-corpo', 'Combate à distancia', 'Precisão',
   'Liturgia', 'Pressagio', 'Intimidação', 'Resiliência', 'Diplomacia',
-  'Disfarçe', 'Ocultismo', 'Caçada', 'Lucidez', 'Convicção', 'Comunhão',
+  'Disfarse', 'Ocultismo', 'Caçada', 'Lucidez', 'Convicção', 'Comunhão',
   'Raizeiro', 'Tambor Ancestral', 'Folclore', 'Ímpeto', 'Rastreamento',
   'Tecnologia', 'Ignorancia', 'Persuasão', 'Audição', 'Ritos', 'Herbologia',
   'Navegação', 'Alquimia', 'Anatomia', 'Profanação', 'Purificação', 'Doutrinas',
@@ -618,3 +620,59 @@ document.getElementById('sp').addEventListener('input', atualizarTurnos);
 // ── INIT FINAL ───────────────────────────────────────────
 atualizarPeso();
 atualizarTurnos();
+
+// ── PONTOS DE ATRIBUTO ────────────────────────────────────
+// Nível 1 = 60 pts, +10 por nível
+function pontosTotal() {
+  const lvl = Number(document.getElementById('playerLevel').value) || 1;
+  return 60 + (lvl - 1) * 10;
+}
+
+function pontosGastos() {
+  return attrPairs.reduce((soma, [inputId]) => {
+    const el = document.getElementById(inputId);
+    return soma + (el ? Number(el.value) || 0 : 0);
+  }, 0);
+}
+
+function atualizarPontos() {
+  const total     = pontosTotal();
+  const gastos    = pontosGastos();
+  const restantes = total - gastos;
+  const pct       = Math.max(0, Math.min(100, (restantes / total) * 100));
+
+  const elRestantes = document.getElementById('pontosRestantes');
+  const elTotal     = document.getElementById('pontosTotal');
+  const elBar       = document.getElementById('pontosBar');
+  const elAviso     = document.getElementById('pontosAviso');
+  if (!elRestantes) return;
+
+  elTotal.textContent     = total;
+  elRestantes.textContent = restantes;
+  elBar.style.width       = pct + '%';
+
+  // cor do número e da barra
+  elRestantes.className = 'pontos-valor';
+  if (restantes < 0) {
+    elRestantes.classList.add('negativo');
+    elBar.style.background = '#ff4444';
+    elAviso.textContent    = `⚠ ${Math.abs(restantes)} pontos acima do limite!`;
+    elAviso.style.color    = '#ff4444';
+  } else if (restantes === 0) {
+    elRestantes.classList.add('cheio');
+    elBar.style.background = 'var(--accent2)';
+    elAviso.textContent    = 'Todos os pontos distribuídos.';
+    elAviso.style.color    = 'var(--muted)';
+  } else if (pct <= 25) {
+    elRestantes.classList.add('aviso');
+    elBar.style.background = '#c8a030';
+    elAviso.textContent    = '';
+  } else {
+    elRestantes.classList.add('ok');
+    elBar.style.background = '#7ecfa0';
+    elAviso.textContent    = '';
+  }
+}
+
+// Chama no init para mostrar 60 pontos já no carregamento
+atualizarPontos();

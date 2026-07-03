@@ -370,3 +370,50 @@ textarea.notes {
   border-color: var(--accent2);
   box-shadow: 0 0 8px #d4404077;
 }
+
+/* ── PONTOS DE ATRIBUTO ──────────────────────────────── */
+.pontos-wrap {
+  border-top: 1px solid var(--border);
+  padding-top: .5rem;
+}
+.pontos-row {
+  display: flex;
+  align-items: baseline;
+  gap: .4rem;
+  margin-bottom: .3rem;
+}
+.pontos-label {
+  font-size: .7rem;
+  color: var(--muted);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  flex: 1;
+}
+.pontos-valor {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--accent2);
+  line-height: 1;
+  transition: color .2s;
+}
+.pontos-valor.ok     { color: #7ecfa0; }
+.pontos-valor.aviso  { color: #c8a030; }
+.pontos-valor.cheio  { color: var(--accent2); }
+.pontos-valor.negativo { color: #ff4444; }
+.pontos-total {
+  font-size: .75rem;
+  color: var(--muted);
+}
+.pontos-bar-wrap {
+  background: #1f1414;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  height: 6px;
+  overflow: hidden;
+}
+.pontos-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .25s, background .25s;
+  background: #7ecfa0;
+}
