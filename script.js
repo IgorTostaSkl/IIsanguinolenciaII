@@ -36,6 +36,7 @@ const attrPairs = [
   ['engineeringScore',  'engineeringDado'],
   ['intelligenceScore', 'intelligenceDado'],
   ['faithScore',        'faithDado'],
+  ['presencaScore',     'presencaDado'],
 ];
 
 attrPairs.forEach(([inputId, badgeId]) => {
@@ -102,7 +103,7 @@ document.getElementById('playerLevel').addEventListener('input', e => updateLeve
 const PERICIAS = [
   'Atletismo', 'Combate corpo-a-corpo', 'Combate à distancia', 'Precisão',
   'Liturgia', 'Pressagio', 'Intimidação', 'Resiliência', 'Diplomacia',
-  'Disfarse', 'Ocultismo', 'Caçada', 'Lucidez', 'Convicção', 'Comunhão',
+  'Disfarce', 'Ocultismo', 'Caçada', 'Lucidez', 'Convicção', 'Comunhão', 'Provocar',
   'Raizeiro', 'Tambor Ancestral', 'Folclore', 'Ímpeto', 'Rastreamento',
   'Tecnologia', 'Ignorancia', 'Persuasão', 'Audição', 'Ritos', 'Herbologia',
   'Navegação', 'Alquimia', 'Anatomia', 'Profanação', 'Purificação', 'Doutrinas',
@@ -676,3 +677,123 @@ function atualizarPontos() {
 
 // Chama no init para mostrar 60 pontos já no carregamento
 atualizarPontos();
+
+// ── ABAS ─────────────────────────────────────────────────
+function abrirAba(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('ativo'));
+  document.querySelectorAll('.sheet-tab').forEach(el => el.classList.remove('ativo'));
+  document.getElementById('aba-' + id).classList.add('ativo');
+  btn.classList.add('ativo');
+}
+
+// ── FAMILIARES ────────────────────────────────────────────
+const FAMILIARES = {
+  'Coruja':   { bonus: '+1 dado em testes de Percepção',                    icone: '' },
+  'Furão':    { bonus: '+1 dado em combate com armas corpo a corpo pequenas', icone: '' },
+  'Macaco':   { bonus: '+1 dado em combate com armas corpo a corpo médias',   icone: '' },
+  'Corvo':    { bonus: '+1d4 de dano adicional em armas de longa distância',  icone: '' },
+  'Capivara': { bonus: '+1d6 em feitiços',                                   icone: '' },
+  'Cobra':    { bonus: '+1d6 em testes de força e +1d4 em ataques físicos',  icone: '' },
+  'Aranha':   { bonus: '+1d6 de resistência contra efeitos negativos',       icone: '' },
+  'Lobo':     { bonus: '+1d6 de força física',                               icone: '' },
+  'Anta':     { bonus: '+1d6 de resistência contra feitiços',                icone: '' },
+  'Tamanduá': { bonus: '+1d6 de resistência contra dano físico',             icone: '' },
+  'Bode':     { bonus: '+1d6 de resistência contra dano elemental',          icone: '' },
+};
+
+let familiarAtual = null;
+
+function initFamiliares() {
+  const menu = document.getElementById('familiarMenu');
+  if (!menu) return;
+
+  Object.entries(FAMILIARES).forEach(([nome, dados]) => {
+    const li = document.createElement('li');
+    const a  = document.createElement('a');
+    a.className   = 'dropdown-item';
+    a.href        = '#';
+    a.textContent = dados.icone + ' ' + nome;
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      selecionarFamiliar(nome, a);
+      bootstrap.Dropdown.getInstance(document.getElementById('familiarBtn'))?.hide();
+    });
+    li.appendChild(a);
+    menu.appendChild(li);
+  });
+}
+
+function selecionarFamiliar(nome, el) {
+  // clicou no mesmo → deseleciona
+  if (familiarAtual === nome) {
+    familiarAtual = null;
+    document.querySelectorAll('#familiarMenu .dropdown-item').forEach(a => a.classList.remove('selected'));
+    document.getElementById('familiarBtn').childNodes[0].textContent = 'Escolher familiar… ';
+    document.getElementById('familiarNome').textContent  = '';
+    document.getElementById('familiarBonus').textContent = '';
+    return;
+  }
+  familiarAtual = nome;
+  const dados = FAMILIARES[nome];
+  document.querySelectorAll('#familiarMenu .dropdown-item').forEach(a => a.classList.remove('selected'));
+  if (el) el.classList.add('selected');
+  document.getElementById('familiarBtn').childNodes[0].textContent = dados.icone + ' ' + nome + ' ';
+  document.getElementById('familiarNome').textContent  = nome;
+  document.getElementById('familiarBonus').textContent = dados.bonus;
+}
+
+// ── PRESENÇA: atualizar info ─────────────────────────────
+function atualizarPresencaInfo() {
+  const val = Number(document.getElementById('presencaScore')?.value) || 0;
+  const el  = document.getElementById('presencaInfo');
+  if (!el) return;
+  if (val === 0) {
+    el.textContent = 'Sem presença definida.';
+    return;
+  }
+  let nivel = '';
+  if      (val <= 5)  nivel = 'Presença baixa — raramente alvo.';
+  else if (val <= 10) nivel = 'Presença moderada — alvo ocasional.';
+  else if (val <= 15) nivel = 'Presença alta — frequentemente visado.';
+  else if (val <= 20) nivel = 'Presença muito alta — alvo prioritário!';
+  else                nivel = 'Presença extrema — sempre o alvo!';
+  el.textContent = nivel;
+  el.style.color = val > 15 ? 'var(--accent2)' : val > 10 ? '#c8a030' : 'var(--muted)';
+}
+
+// Integração salvar/carregar/resetar
+const _colFamOrig = coletarFicha;
+coletarFicha = function() {
+  const d = _colFamOrig();
+  d.familiarAtual = familiarAtual;
+  return d;
+};
+
+const _aplFamOrig = aplicarFicha;
+aplicarFicha = function(dados) {
+  _aplFamOrig(dados);
+  if (dados.familiarAtual) {
+    const itens = document.querySelectorAll('#familiarMenu .dropdown-item');
+    itens.forEach(a => {
+      if (a.textContent.includes(dados.familiarAtual)) selecionarFamiliar(dados.familiarAtual, a);
+    });
+  }
+};
+
+const _resFamOrig = resetarFicha;
+resetarFicha = function() {
+  _resFamOrig();
+  familiarAtual = null;
+  document.querySelectorAll('#familiarMenu .dropdown-item').forEach(a => a.classList.remove('selected'));
+  const btn = document.getElementById('familiarBtn');
+  if (btn) btn.childNodes[0].textContent = 'Escolher familiar… ';
+  const fn = document.getElementById('familiarNome');
+  const fb = document.getElementById('familiarBonus');
+  if (fn) fn.textContent = '';
+  if (fb) fb.textContent = '';
+};
+
+// ── INIT FAMILIARES (após DOM pronto) ────────────────────
+window.addEventListener('load', () => {
+  initFamiliares();
+});

@@ -417,3 +417,74 @@ textarea.notes {
   transition: width .25s, background .25s;
   background: #7ecfa0;
 }
+
+/* ── ABAS (TABS) ─────────────────────────────────────── */
+.sheet-tabs {
+  display: flex;
+  gap: .3rem;
+  margin-bottom: -.5rem;
+  padding: 0 .5rem;
+  flex-wrap: wrap;
+}
+.sheet-tab {
+  background: #140c0c;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  color: var(--muted);
+  font-family: 'Georgia', serif;
+  font-size: .78rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .45rem 1rem;
+  border-radius: 5px 5px 0 0;
+  cursor: pointer;
+  transition: color .2s, background .2s;
+  user-select: none;
+}
+.sheet-tab:hover { color: var(--text); }
+.sheet-tab.ativo {
+  background: var(--surface);
+  color: var(--accent2);
+  border-color: var(--border);
+}
+.tab-content { display: none; }
+.tab-content.ativo { display: block; }
+
+/* ── FAMILIAR GRID ───────────────────────────────────── */
+.familiar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: .6rem;
+  margin-bottom: .75rem;
+}
+.familiar-card {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: .6rem .5rem;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .25rem;
+  text-align: center;
+}
+.familiar-card:hover { border-color: var(--accent); background: #1f1515; }
+.familiar-card.ativo {
+  border-color: var(--accent2);
+  background: #2a1010;
+  box-shadow: 0 0 8px #a8202040;
+}
+.familiar-icone { font-size: 1.6rem; line-height: 1; }
+.familiar-nome  { font-size: .82rem; color: var(--text); font-weight: bold; }
+.familiar-bonus { font-size: .65rem; color: var(--muted); line-height: 1.3; }
+
+/* ── PRESENÇA INFO ───────────────────────────────────── */
+#presencaInfo {
+  font-size: .75rem;
+  margin-top: .4rem;
+  min-height: 1rem;
+  color: var(--muted);
+  transition: color .3s;
+}

@@ -124,12 +124,34 @@
       </div>
     </div>
 
-    <!-- ITEM QUERIDO -->
+    <!-- ITEM QUERIDO + FAMILIAR -->
     <div class="col-12 col-md-7">
-      <div class="card-dark h-100">
-        <h5>Item Querido</h5>
-        <input type="text" id="itemQuerido" placeholder="Nome do item querido do personagem…" style="margin-bottom:.6rem;">
-        <div id="itemQueridoDesc" style="font-size:.72rem;color:var(--muted);line-height:1.5;min-height:1rem;"></div>
+      <div class="row g-3 h-100">
+
+        <!-- ITEM QUERIDO -->
+        <div class="col-12 col-sm-6">
+          <div class="card-dark h-100">
+            <h5>Item Querido</h5>
+            <input type="text" id="itemQuerido" placeholder="Nome do item querido…" style="margin-bottom:.6rem;">
+            <div id="itemQueridoDesc" style="font-size:.72rem;color:var(--muted);line-height:1.5;min-height:1rem;"></div>
+          </div>
+        </div>
+
+        <!-- FAMILIAR -->
+        <div class="col-12 col-sm-6">
+          <div class="card-dark h-100">
+            <h5>Familiar</h5>
+            <div class="dropdown dropdown-dark" id="familiarDropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" id="familiarBtn">
+                Escolher familiar…
+              </button>
+              <ul class="dropdown-menu" id="familiarMenu" style="max-height:220px;overflow-y:auto;"></ul>
+            </div>
+            <div id="familiarNome" style="margin-top:.6rem;font-size:.8rem;color:var(--accent2);font-weight:bold;min-height:1.2rem;"></div>
+            <div id="familiarBonus" style="font-size:.7rem;color:var(--muted);line-height:1.5;min-height:1rem;"></div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -138,12 +160,12 @@
   <!-- LINHA PRINCIPAL -->
   <div class="row g-3 mb-3">
 
-<!-- ATRIBUTOS -->
+    <!-- ATRIBUTOS -->
     <div class="col-12 col-md-6 col-lg-5">
       <div class="card-dark">
         <h5>Atributos</h5>
         <table class="attr-table">
-          <thead>	
+          <thead>
             <tr>
               <th>Atributo</th>
               <th>Valor</th>
@@ -153,55 +175,50 @@
           <tbody>
             <tr>
               <td>Força</td>
-              <td><input type="number" placeholder="0" id="strScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="strScore" min="0"></td>
               <td><span class="dado-badge" id="strDado">d4</span></td>
             </tr>
             <tr>
               <td>Agilidade</td>
-              <td><input type="number" placeholder="0" id="aglScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="aglScore" min="0"></td>
               <td><span class="dado-badge" id="aglDado">d4</span></td>
             </tr>
             <tr>
               <td>Condicionamento</td>
-              <td><input type="number" placeholder="0" id="conScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="conScore" min="0"></td>
               <td><span class="dado-badge" id="conDado">d4</span></td>
             </tr>
             <tr>
               <td>Persuasão</td>
-              <td><input type="number" placeholder="0" id="persuasionScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="persuasionScore" min="0"></td>
               <td><span class="dado-badge" id="persuasionDado">d4</span></td>
-            </tr>	
+            </tr>
             <tr>
               <td>Sanidade</td>
-              <td><input type="number" placeholder="0" id="sanityScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="sanityScore" min="0"></td>
               <td><span class="dado-badge" id="sanityDado">d4</span></td>
             </tr>
             <tr>
               <td>Vigília</td>
-              <td><input type="number" placeholder="0" id="vigiliaScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="vigiliaScore" min="0"></td>
               <td><span class="dado-badge" id="vigiliaDado">d4</span></td>
             </tr>
             <tr>
               <td>Engenharia</td>
-              <td><input type="number" placeholder="0" id="engineeringScore" min="0"></td>
+              <td><input type="number" placeholder="10" id="engineeringScore" min="0"></td>
               <td><span class="dado-badge" id="engineeringDado">d4</span></td>
             </tr>
             <tr>
-              <td>Inteligencia</td>
-              <td><input type="number" placeholder="0" id="intelligenceScore" min="0"></td>
-              <td><span class="dado-badge" id="intelligenceDado">d4</span></td>
-            </tr>
-            <tr>
-              <td>Fé</td>
-              <td><input type="number" placeholder="0" id="faithScore" min="0"></td>
-              <td><span class="dado-badge" id="faithDado">d4</span></td>
+              <td>Presença</td>
+              <td><input type="number" placeholder="10" id="presencaScore" min="0" oninput="atualizarPresencaInfo()"></td>
+              <td><span class="dado-badge" id="presencaDado">d4</span></td>
             </tr>
           </tbody>
         </table>
         <p class="mt-2 mb-0" style="font-size:.7rem;color:var(--muted);">
           Dado sobe a cada 5 pontos: d4 → d6 → d8 → d10 → d12 → d20
         </p>
-           <div class="pontos-wrap mt-2">
+        <div class="pontos-wrap mt-2">
           <div class="pontos-row">
             <span class="pontos-label">Pontos disponíveis</span>
             <span id="pontosRestantes" class="pontos-valor">60</span>
@@ -296,6 +313,8 @@
       </div>
     </div>
   </div>
+
+
 
   <!-- AÇÕES DA FICHA -->
   <div class="sheet-actions">
